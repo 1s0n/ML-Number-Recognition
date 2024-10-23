@@ -1,6 +1,9 @@
 #
 # This is a sample Notebook to demonstrate how to read "MNIST Dataset"
 #
+
+# %matplotlib inline
+
 import numpy as np # linear algebra
 import struct
 from array import array
@@ -47,19 +50,70 @@ class MnistDataloader(object):
         return (x_train, y_train),(x_test, y_test)
 
 
-loader = MnistDataloader("./data/train-images-idx3-ubyte/train-images-idx3-ubyte", "./data/train-labels-idx1-ubyte/train-labels-idx1-ubyte", "./data/t10k-images-idx3-ubyte/t10k-images-idx3-ubyte", "./data/t10k-labels-idx1-ubyte/t10k-labels-idx1-ubyte")
-
-a = loader.load_data()
-
-print(len(np.array(a[0][0)))
-print(len(np.array(a[0][0]).ravel()))
-
-# from PIL import Image
-# import numpy as np
+# loader = MnistDataloader("./data/train-images-idx3-ubyte/train-images-idx3-ubyte", "./data/train-labels-idx1-ubyte/train-labels-idx1-ubyte", "./data/t10k-images-idx3-ubyte/t10k-images-idx3-ubyte", "./data/t10k-labels-idx1-ubyte/t10k-labels-idx1-ubyte")
 #
-# w, h = 512, 512
-# data = np.array(a[0][0])
-# data[0:256, 0:256] = [255, 0, 0] # red patch in upper left
-# img = Image.fromarray(data, 'RGB')
-# img.save('my.png')
-# img.show()
+# a = loader.load_data()
+def show_images(images, title_texts):
+    cols = 5
+    rows = int(len(images)/cols) + 1
+    plt.figure(figsize=(30,20))
+    index = 1    
+    for x in zip(images, title_texts):        
+        # print("AAA")
+
+        image = x[0]        
+        print(f"X: {len(image)}, Y: {len(image[0])}")
+        title_text = x[1]
+        # print(title_text)
+        plt.subplot(rows, cols, index)        
+        plt.imshow(image, cmap='Greys')
+        if (title_text != ''):
+            plt.title(title_text, fontsize = 15);        
+        index += 1
+
+if __name__ == "__main__":
+    # print(len(np.array(a[0][0][0])))
+    # print(len(np.array(a[0][0]).ravel()))
+    #
+    # %matplotlib inline
+    import random
+    import matplotlib.pyplot as plt
+
+    #
+    # Set file paths based on added MNIST Datasets
+    #
+    input_path = './data/'
+    training_images_filepath = join(input_path, 'train-images-idx3-ubyte/train-images-idx3-ubyte')
+    training_labels_filepath = join(input_path, 'train-labels-idx1-ubyte/train-labels-idx1-ubyte')
+    test_images_filepath = join(input_path, 't10k-images-idx3-ubyte/t10k-images-idx3-ubyte')
+    test_labels_filepath = join(input_path, 't10k-labels-idx1-ubyte/t10k-labels-idx1-ubyte')
+
+    #
+    # Helper function to show a list of images with their relating titles
+    #
+        
+    print("A")
+    #
+    # Load MINST dataset
+    #
+    mnist_dataloader = MnistDataloader(training_images_filepath, training_labels_filepath, test_images_filepath, test_labels_filepath)
+    (x_train, y_train), (x_test, y_test) = mnist_dataloader.load_data()
+
+    #
+    # Show some random training and test images 
+    #
+    images_2_show = []
+    titles_2_show = []
+    for i in range(0, 5):
+        r = random.randint(1, 60000)
+        images_2_show.append(x_train[r])
+        titles_2_show.append('training image [' + str(r) + '] = ' + str(y_train[r]))    
+
+    for i in range(0, 5):
+        r = random.randint(1, 10000)
+        images_2_show.append(x_test[r])        
+        titles_2_show.append('test image [' + str(r) + '] = ' + str(y_test[r]))    
+
+    # print(images_2_show)
+    show_images(images_2_show, titles_2_show)
+    plt.show()
